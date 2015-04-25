@@ -1,16 +1,6 @@
 
-function first = first(image_start);
-% % Get Image from user
-% filename = imgetfile;
-% image_start = imread(filename);
-
-uniquePixels = unique(image_start);
-n = histc(image_start(:,:,2), uniquePixels);
-[maxNum, maxInd] = max(n);
-most_freq_px = uniquePixels(maxInd);
-
+function remove_green = remove_green(image_start);
 [height, width, depth] = size(image_start);
-
 image_no_green = image_start;
 
 for row = 1:height
@@ -25,8 +15,8 @@ for row = 1:height
 end
 
 % imshow(image_no_green);
-% imwrite(image_no_green, [ 'images\' 'image ' datestr(now, 'dd HH-MM-SS') '.jpg']);
-first = image_no_green;
+imwrite(image_no_green, [ 'images\' 'image ' datestr(now, 'dd HH-MM-SS') '.jpg']);
+remove_green = image_no_green;
 
 % % Convert to greyscale
 % image_start = rgb2gray(image_start);
