@@ -3,26 +3,32 @@ function remove_common = remove_common(image_start);
 % filename = imgetfile;
 % image_start = imread(filename);
 
-uniquePixels = unique(image_start);
-n = histc(image_start(:,:,2), uniquePixels);
-[maxNum, maxInd] = max(n);
-most_freq_px = uniquePixels(maxInd);
+image_no_background = image_start;
+hue_image = rgb2hsv(image_start);
+just_hue = hue_image(:,:,1);
 
-[height, width, depth] = size(image_start);
 
-image_no_green = image_start;
+%uniquePixels = unique(just_hue);
+%n = histc(just_hue, uniquePixels);
+%[maxNum, maxInd] = max(n);
+
+%most_freq_hue_value = uniquePixels(maxInd);
+most_freq_hue_value = mode(just_hue(:));
+THRESHOLD = 0.03;
+
+[height, width, ~] = size(image_start);
 
 for row = 1:height
     for col = 1:width
-        green = image_start(row, col, 2);
-        if ismember(green, 100:150) %green == 126
-            image_no_green(row,col,1) = 0;
-            image_no_green(row,col,2) = 0;
-            image_no_green(row,col,3) = 0;
+        hue_value = just_hue(row, col);
+        if abs(hue_value - most_freq_hue_value) <= THRESHOLD
+            image_no_background(row,col,1) = 0;
+            image_no_background(row,col,2) = 0;
+            image_no_background(row,col,3) = 0;
         end
     end
 end
 
 % imshow(image_no_green);
-imwrite(image_no_green, [ 'images\' 'image ' datestr(now, 'dd HH-MM-SS') '.jpg']);
-remove_common = image_no_green;
+imwrite(image_no_background, [ 'images\' 'image ' datestr(now, 'dd HH-MM-SS') '.jpg']);
+remove_common = image_no_background;
